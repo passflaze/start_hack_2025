@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    networks:
+      - seven_network
+    #env_file:
+    #  - .env
+    # environment:
+    #   DB_HOST: ${DB_HOST?Variable not set}
+    #   DB_USER: ${DB_USER?Variable not set}
+    #   DB_PASSWORD: ${DB_PASSWORD?Variable not set}
+    #   DB_DATABASE: ${DB_DATABASE?Variable not set}
+    container_name: seven_backend
+
+networks:
+  seven_network:
