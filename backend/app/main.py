@@ -32,6 +32,8 @@ app.add_middleware(
     max_age=3600
 )
 
+app.include_router(api_router)
+
 
 
 

@@ -1,0 +1,1 @@
+{"openapi": "3.1.0", "info": {"title": "Seven", "version": "0.1.0"}, "servers": [{"url": "/v1/seven"}], "paths": {"/calcultaion/sharpee_ratio/": {"get": {"tags": ["calculation"], "summary": "Get Sharpee Ratio", "operationId": "get_sharpee_ratio", "responses": {"200": {"description": "Successful Response", "content": {"application/json": {"schema": {}}}}}}}}}
