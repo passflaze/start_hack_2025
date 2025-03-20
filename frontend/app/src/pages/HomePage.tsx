@@ -23,10 +23,11 @@ export default function HomePage() {
   return (
     <PageLayout>
       {/* Header */}
-      <UserHeader user={demoUser} />
+      <UserHeader user={demoUser} className="flex-shrink-0" />
       
       {/* Grid Content - Empty containers ready for external components */}
-      <GridContainer className="mt-4 md:mt-6 flex-grow h-full">
+      <GridContainer className="my-10 flex-1 min-h-0">
+        
         {/* These empty GridCards can be replaced or populated with external components */}
         <GridCard color="bg-blue-50" className="h-full" />
         <GridCard color="bg-green-50" className="h-full" />

@@ -7,7 +7,7 @@ export interface GridContainerProps {
 
 export function GridContainer({ children, className }: GridContainerProps) {
   return (
-    <div className={`grid-container grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 h-full ${className}`}>
+    <div className={`grid-container grid grid-cols-1 md:grid-cols-2 gap-3 h-[70vh] overflow-hidden ${className}`}>
       {children}
     </div>
   );
