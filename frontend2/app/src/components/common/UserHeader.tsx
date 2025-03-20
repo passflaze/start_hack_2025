@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@chakra-ui/react";
 import React, { useEffect, useState } from 'react';
-import { GptService } from '../../client';
+import { FinalResult, GptService } from '../../client';
 
 
 interface DeepgramTranscriptAlternative {
@@ -25,14 +25,14 @@ export interface UserHeaderProps {
     age: number;
     netWorth: string;
   };
-  
+  setResults: React.Dispatch<React.SetStateAction<FinalResult | null>>,
   className?: string;
 }
 
-export function UserHeader({ user, className }: UserHeaderProps) {
+export function UserHeader({ user, className, setResults }: UserHeaderProps) {
   const [connectionStatus, setConnectionStatus] = useState<string>('Disconnected');
   const [transcript, setTranscript] = useState<string>('');
-  const [results, setResults] = useState<string>('');
+  
   
   
     let mediaRecorder: MediaRecorder | undefined;

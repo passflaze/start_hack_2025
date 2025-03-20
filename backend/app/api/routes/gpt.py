@@ -5,50 +5,63 @@ import os
 import json
 import ast
 import requests
-from app.pydantic_models import FinalResult
+from app.pydantic_models import FinalResult, Asset
 import urllib.parse
 from app.api.routes.stats import *
+from app.sentiment_analysis import get_sentiment_score
+from app.api.routes.historical import asset_list
+
+
+api_key_gemini = "AIzaSyDwep2fdGC4e8OZ1O46yhCxqq9pUgyVgB0"
+
+
+
+from google import genai
+
+client = genai.Client(api_key=api_key_gemini)
+
 
 router = APIRouter(prefix="/gpt")
 
-@router.post("/send_text", tags=["gpt"])
+@router.post("/send_text", response_model=FinalResult, tags=["gpt"])
 def send_gpt(text: str):
+      
+      print("Entered send gpt")
    
-
-      from sentiment_analysis import sentiment_analysis
-      sentiment = sentiment_analysis(text)
+      #sentiment = get_sentiment_score(text)
    
-      query_info = f"""
-       between the tags you will hear a conversation between a financial advisor and his client.
-         the conversation may not be complete.
+      # query_info = f"""
+      
+      #  between the tags you will hear a conversation between a financial advisor and his client.
+      #    the conversation may not be complete.
        
-       <tag>
-       {text}
-       </tag>
+      #  <tag>
+      #  {text}
+      #  </tag>
 
-       From this conversation i want to know the client goals and the risk profile.
-       Return me a array with two strings inside, in the first one define the goal of the client,
-       in the second one his risk profile on a 0-10 scale.
+      #  From this conversation i want to know the client goals and the risk profile.
+      #  Return me a array with two strings inside, in the first one define the goal of the client,
+      #  in the second one his risk profile on a 0-10 scale.
        
-       Example of the answer:
-       ["Retirement as early as possible", "7"]
+      #  Example of the answer:
+      #  ["Retirement as early as possible", "7"]
        
-       Another example
-       ["Buy an house for my brother", "5"]
+      #  Another example
+      #  ["Buy an house for my brother", "5"]
        
-       """
+      #  """
 
-      encoded_query_info = urllib.parse.quote(query_info)
+      # encoded_query_info = urllib.parse.quote(query_info)
 
       
 
-      url_info = f"https://idchat-api-containerapp01-dev.orangepebble-16234c4b.switzerlandnorth.azurecontainerapps.io/llm?query={encoded_query_info}"
-      response_info = requests.post(url_info)
+      # url_info = f"https://idchat-api-containerapp01-dev.orangepebble-16234c4b.switzerlandnorth.azurecontainerapps.io/llm?query={encoded_query_info}"
+      # response_info = requests.post(url_info)
        
-      r_info = response_info.json()
-      r_info = ast.literal_eval(r_info["content"])
+      # r_info = response_info.json()
+      # r_info = ast.literal_eval(r_info["content"])
        
-
+   
 
       query = f"""
        you have to define an asset allocation given the information of the following text surrounded by <tag></tag>.
@@ -93,7 +106,7 @@ def send_gpt(text: str):
        for each asset, you should decide a weight in the portfolio.
        the sum of all the weights should be 1.
 
-       Return me only one array of 25 elements, where each element is the weight of an asset.
+       Return me only one array of 24 elements, where each element is the weight of an asset.
        you can only return an answer like the following.
        don't say anithing except the following array.
 
@@ -102,30 +115,32 @@ def send_gpt(text: str):
        
        
        [0.1, 0.1, 0.2, 0.05, 0.00, 0.0, 0.1, 0.0, 0.05, 0.05, 0.0, 0.0, 0.1, 0.05, 0.0,
-       0.01, 0.06, 0.02, 0.00, 0.05, 0.0, 0.0, 0.02, 0.04, 0.0] 
+       0.01, 0.06, 0.02, 0.00, 0.05, 0.0, 0.0, 0.02, 0.04] 
        """
 
       encoded_query = urllib.parse.quote(query)
 
-
-      url = f"https://idchat-api-containerapp01-dev.orangepebble-16234c4b.switzerlandnorth.azurecontainerapps.io/llm?query={encoded_query}"
+      response = client.models.generate_content(
+      model="gemini-2.0-flash", contents=encoded_query
+        )
+      #url = f"https://idchat-api-containerapp01-dev.orangepebble-16234c4b.switzerlandnorth.azurecontainerapps.io/llm?query={encoded_query}"
        
 
-      response = requests.post(url)
-      r = response.json()
-       
+      str_weights = response.text
+      
+
       from app.api.routes.historical import portfolio_builder
        
 
-      string_weights = r["content"]
 
        #final_result = FinalResult()
 
-      weights = ast.literal_eval(string_weights)
+      weights = ast.literal_eval(str_weights)
        
       portfolio = portfolio_builder(weights)
-      portfolio_json = portfolio.to_json()
-       
+      portfolio_list = portfolio.to_dict()
+      
+           
        
        
       list_stats = [
@@ -141,17 +156,24 @@ def send_gpt(text: str):
          get_total_return(portfolio),
          get_value_at_risk(portfolio),
       ]
+
+      assets = []
+      for i, weight in enumerate(weights):
+          t = Asset(
+              weight = weight,
+              label = asset_list[i][0]
+          )
+          assets.append(t)
       
       final_result = FinalResult(
-              weights = weights,
+              assets = assets,
               stats =  list_stats,
-              time_serie =  portfolio_json,
-              risk_profile = r_info[1],
-              goal = r_info[0]
-              )
+              time_serie =  portfolio_list,
+              risk_profile = "null",#r_info[1],
+              goal = "null"#r_info[0]
+          )
       
-      print("ciao!")
-      return "ciao!!!"
+      
       return final_result
 
     #portfolio builder ritorna un dataframe

@@ -50,7 +50,8 @@ def get_sentiment_score(text, chunk_size=400, stride=200):
 
     return {"sentiment": final_sentiment, "score": avg_score}
 
-# Example Usage
-client_text = "Your full transcript here..."  # Ensure it's a long text
-result = get_sentiment_score(client_text)
-print(result)
+
+if __name__ == "__main__":
+    client_text = "Your full transcript here..."
+    result = get_sentiment_score(client_text)
+    print(result)

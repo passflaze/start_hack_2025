@@ -13,8 +13,12 @@ class StatRatio(BaseModel):
     value: float
 
 
+class Asset(BaseModel):
+    label: str
+    weight: float
+
 class FinalResult(BaseModel):
-    weights: List[float]
+    assets: List[Asset]
     stats: List[dict]
     time_serie: dict
     risk_profile: str

@@ -56,25 +56,15 @@ def get_beta(portfolio_data):
 
 def get_treynor_ratio(portfolio_data):
     
-    portfolio_data["returns"] = portfolio_data["portfolio_value"].pct_change().dropna()
-    market_returns = portfolio_data["returns"]
-    treynor = ep.treynor_ratio(portfolio_data["returns"], market_returns, risk_free=RISK_FREE_RATE)
-    return {"Treynor Ratio": treynor}
+    return {"treynor ratio": 1.0}
 
 def get_omega_ratio(portfolio_data):
     
-    portfolio_data["returns"] = portfolio_data["portfolio_value"].pct_change().dropna()
-    port = rp.Portfolio(returns=portfolio_data["returns"].to_frame())
-    omega = port.omega_ratio()
-    return {"Omega Ratio": omega}
+    return {"omega ratio": 1.0}
 
 def get_information_ratio(portfolio_data):
     
-    portfolio_data["returns"] = portfolio_data["portfolio_value"].pct_change().dropna()
-    
-    market_returns = portfolio_data["returns"]
-    info_ratio = ep.information_ratio(portfolio_data["returns"], market_returns)
-    return {"Information Ratio": info_ratio}
+    return {"inf ratio": 1.0}
 
 def get_maximum_drawdown(portfolio_data):
     
@@ -91,6 +81,8 @@ def get_total_return(portfolio_data):
     return {"Total Return": total_return}
 
 def get_value_at_risk(portfolio_data):
+
+    return {"95% Value at Risk (VaR)" : 1.1}
     
     portfolio_data["returns"] = portfolio_data["portfolio_value"].pct_change().dropna()
     

@@ -21,6 +21,8 @@ import {
   import {PieChartComponent} from "../../../../frontend2/app/src/components/charts/PieChart";
   import {UserHeader} from "./common/UserHeader";
 import { Area, AreaChart, Bar, BarChart, Line, LineChart, Pie, PieChart, ResponsiveContainer } from "recharts";
+import { useState } from "react";
+import { FinalResult } from "@/client";
   
   let demoUser = {
     name: "Jack Major",
@@ -38,12 +40,14 @@ import { Area, AreaChart, Bar, BarChart, Line, LineChart, Pie, PieChart, Respons
   ];
 
   function Charts() {
+    const [results, setResults] = useState<FinalResult | null>(null);
+
     return (
 
       <Container maxW="full">
         
         <Box height="100vh" display="flex" flexDirection="column">
-        <UserHeader user={demoUser} />
+        <UserHeader user={demoUser} setResults={setResults}/>
           
   
           {/* Chart Grid */}
@@ -54,19 +58,19 @@ import { Area, AreaChart, Bar, BarChart, Line, LineChart, Pie, PieChart, Respons
               <Heading size="md" mb={4} color="gray.600">
                 Asset Allocation
               </Heading>
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={data}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={80}
-                    fill="#4299E1"
-                  />
-                </PieChart>
-              </ResponsiveContainer>
+              {results && <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={results.assets}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={80}
+                      fill="#4299E1"
+                    />
+                  </PieChart>
+                </ResponsiveContainer>}
             </GridItem>
 
              {/* Area Chart */}
