@@ -51,7 +51,7 @@ import { Area, AreaChart, Bar, BarChart, Line, LineChart, Pie, PieChart, Respons
             {/* Pie Chart */}
             <GridItem bg="white" p={4} borderRadius="lg" boxShadow="md">
               <Heading size="md" mb={4} color="gray.600">
-                Market Share
+                Asset Allocation
               </Heading>
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
@@ -71,7 +71,7 @@ import { Area, AreaChart, Bar, BarChart, Line, LineChart, Pie, PieChart, Respons
              {/* Area Chart */}
              <GridItem bg="white" p={4} borderRadius="lg" boxShadow="md">
               <Heading size="md" mb={4} color="gray.600">
-                User Growth
+                Portfolio Backtest
               </Heading>
               <ResponsiveContainer width="100%" height={300}>
                 <AreaChart data={data}>
@@ -83,33 +83,33 @@ import { Area, AreaChart, Bar, BarChart, Line, LineChart, Pie, PieChart, Respons
             {/* Line Chart */}
             <GridItem bg="white" p={4} borderRadius="lg" boxShadow="md">
             <Heading size="md" mb={4} color="gray.600">
-                Revenue Overview
+                Financial Indexes
               </Heading>
             <Table>
                 <Thead>
-                    <Th borderRight="1px solid"  borderColor="gray.200">Periodo</Th>
-                    <Th>Fatturato</Th>
+                    <Th borderRight="1px solid"  borderColor="gray.200">Index</Th>
+                    <Th>Ratio</Th>
                 </Thead>
                 <Tbody>
                     <Tr>
-                        <Th borderRight="1px solid" borderColor="gray.200">Fatturato medio giornaliero</Th>
+                        <Th borderRight="1px solid" borderColor="gray.200">Sharpe Ratio</Th>
                         <Td 
                         ></Td>
                     </Tr>
                     <Tr>
-                        <Th borderRight="1px solid"  borderColor="gray.200">Fatturato medio settimanale</Th>
+                        <Th borderRight="1px solid"  borderColor="gray.200">Sortino Ratio</Th>
                         <Td></Td>
                     </Tr>
                     <Tr>
-                        <Th borderRight="1px solid"  borderColor="gray.200">Fatturato medio mensile</Th>
+                        <Th borderRight="1px solid"  borderColor="gray.200">Calmar Ratio</Th>
                         <Td></Td>
                     </Tr>
                     <Tr>
-                        <Th borderRight="1px solid"  borderColor="gray.200">Fatturato totale</Th>
+                        <Th borderRight="1px solid"  borderColor="gray.200">Information Ratio</Th>
                         <Td></Td>
                     </Tr>
                     <Tr>
-                        <Th borderRight="1px solid"  borderColor="gray.200">Fatturato totale</Th>
+                        <Th borderRight="1px solid"  borderColor="gray.200">Treynor Ratio</Th>
                         <Td></Td>
                     </Tr>
                 </Tbody>
@@ -119,33 +119,33 @@ import { Area, AreaChart, Bar, BarChart, Line, LineChart, Pie, PieChart, Respons
             {/* Bar Chart */}
             <GridItem bg="white" p={4} borderRadius="lg" boxShadow="md">
               <Heading size="md" mb={4} color="gray.600">
-                Revenue Overview
+                Portfolio Metric
               </Heading>
               <Table>
                 <Thead>
-                    <Th borderRight="1px solid"  borderColor="gray.200">Periodo</Th>
-                    <Th>Fatturato</Th>
+                    <Th borderRight="1px solid"  borderColor="gray.200">Metric</Th>
+                    <Th>Value</Th>
                 </Thead>
                 <Tbody>
                     <Tr>
-                        <Th borderRight="1px solid" borderColor="gray.200">Fatturato medio giornaliero</Th>
+                        <Th borderRight="1px solid" borderColor="gray.200">Alpha</Th>
                         <Td 
                         ></Td>
                     </Tr>
                     <Tr>
-                        <Th borderRight="1px solid"  borderColor="gray.200">Fatturato medio settimanale</Th>
+                        <Th borderRight="1px solid"  borderColor="gray.200">Beta</Th>
                         <Td></Td>
                     </Tr>
                     <Tr>
-                        <Th borderRight="1px solid"  borderColor="gray.200">Fatturato medio mensile</Th>
+                        <Th borderRight="1px solid"  borderColor="gray.200">Maximum Drawdon</Th>
                         <Td></Td>
                     </Tr>
                     <Tr>
-                        <Th borderRight="1px solid"  borderColor="gray.200">Fatturato totale</Th>
+                        <Th borderRight="1px solid"  borderColor="gray.200">Value at Risk</Th>
                         <Td></Td>
                     </Tr>
                     <Tr>
-                        <Th borderRight="1px solid"  borderColor="gray.200">Fatturato totale</Th>
+                        <Th borderRight="1px solid"  borderColor="gray.200">Total Return</Th>
                         <Td></Td>
                     </Tr>
                 </Tbody>

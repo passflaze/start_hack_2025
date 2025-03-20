@@ -138,7 +138,7 @@ def send_gpt(text: str):
          get_omega_ratio(portfolio),
          get_information_ratio(portfolio),
          get_maximum_drawdown(portfolio),
-         #get_total_return(portfolio),
+         get_total_return(portfolio),
          get_value_at_risk(portfolio),
       ]
       
