@@ -1,9 +1,7 @@
 import { useState } from 'react'
 import { ChakraProvider, Heading } from '@chakra-ui/react'
-
-import HomePage from "@/pages/HomePage";
-import DeepgramTranscription from './pages/DeepgramTranscription';
-import Charts from './pages/Charts';
+import Charts from './components/Charts'
+import DeepgramTranscription from './components/common/DeepgramTranscription'
 
 
 function App() {
@@ -11,10 +9,8 @@ function App() {
 
   return (
     <>
-    //<HomePage />
-
       <Charts/>
-     //<DeepgramTranscription/> 
+     <DeepgramTranscription/> 
     </>
     
   )

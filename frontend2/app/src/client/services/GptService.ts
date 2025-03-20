@@ -2,26 +2,26 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { PortfolioInfo } from '../models/PortfolioInfo';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
-export class HistoricalService {
+export class GptService {
     /**
-     * Portfolio Builder
+     * Send Gpt
      * @returns any Successful Response
      * @throws ApiError
      */
-    public static portfolioBuilder({
-        requestBody,
+    public static sendGpt({
+        text,
     }: {
-        requestBody: PortfolioInfo,
+        text: string,
     }): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/portfolio/',
-            body: requestBody,
-            mediaType: 'application/json',
+            url: '/gpt/send_text',
+            query: {
+                'text': text,
+            },
             errors: {
                 422: `Validation Error`,
             },

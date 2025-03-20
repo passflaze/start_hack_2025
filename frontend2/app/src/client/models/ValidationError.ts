@@ -2,8 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type PortfolioInfo = {
-    init_amount: number;
-    weights: Array<number>;
+export type ValidationError = {
+    loc: Array<(string | number)>;
+    msg: string;
+    type: string;
 };
 

@@ -11,4 +11,3 @@ export type { HTTPValidationError } from './models/HTTPValidationError';
 export type { ValidationError } from './models/ValidationError';
 
 export { GptService } from './services/GptService';
-export { StatsService } from './services/StatsService';

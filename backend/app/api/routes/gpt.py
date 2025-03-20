@@ -7,7 +7,7 @@ import ast
 import requests
 from app.pydantic_models import FinalResult
 import urllib.parse
-from stats import *
+from app.api.routes.stats import *
 
 router = APIRouter(prefix="/gpt")
 
@@ -15,7 +15,9 @@ router = APIRouter(prefix="/gpt")
 def send_gpt(text: str):
    
       final_result = FinalResult()
-   
+
+      from sentiment_analysis import sentiment_analysis
+      sentiment = sentiment_analysis(text)
    
       query_info = f"""
        between the tags you will hear a conversation between a financial advisor and his client.
@@ -38,6 +40,8 @@ def send_gpt(text: str):
        """
 
       encoded_query_info = urllib.parse.quote(query_info)
+
+      
 
       url_info = f"https://idchat-api-containerapp01-dev.orangepebble-16234c4b.switzerlandnorth.azurecontainerapps.io/llm?query={encoded_query_info}"
       response_info = requests.post(url_info)
@@ -104,6 +108,7 @@ def send_gpt(text: str):
        """
 
       encoded_query = urllib.parse.quote(query)
+
 
       url = f"https://idchat-api-containerapp01-dev.orangepebble-16234c4b.switzerlandnorth.azurecontainerapps.io/llm?query={encoded_query}"
        
