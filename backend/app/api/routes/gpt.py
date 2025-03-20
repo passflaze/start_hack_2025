@@ -14,7 +14,6 @@ router = APIRouter(prefix="/gpt")
 @router.post("/send_text", tags=["gpt"])
 def send_gpt(text: str):
    
-      final_result = FinalResult()
 
       from sentiment_analysis import sentiment_analysis
       sentiment = sentiment_analysis(text)
@@ -49,8 +48,7 @@ def send_gpt(text: str):
       r_info = response_info.json()
       r_info = ast.literal_eval(r_info["content"])
        
-      final_result.goal = r_info[0]
-      final_result.risk_profile = r_info[1]
+
 
       query = f"""
        you have to define an asset allocation given the information of the following text surrounded by <tag></tag>.
@@ -124,12 +122,10 @@ def send_gpt(text: str):
        #final_result = FinalResult()
 
       weights = ast.literal_eval(string_weights)
-      final_result.weights = weights
        
       portfolio = portfolio_builder(weights)
       portfolio_json = portfolio.to_json()
        
-      final_result.time_serie = portfolio_json
        
        
       list_stats = [
@@ -146,7 +142,13 @@ def send_gpt(text: str):
          get_value_at_risk(portfolio),
       ]
       
-      final_result.stats = list_stats
+      final_result.stats = FinalResult(
+        weights: weights
+        stats: list_stats
+        time_serie: portfolio_json
+        risk_profile: r_info[1]
+        goal: r_info[0]
+      )
 
     #portfolio builder ritorna un dataframe
 
