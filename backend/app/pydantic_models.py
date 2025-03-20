@@ -15,5 +15,7 @@ class StatRatio(BaseModel):
 
 class FinalResult(BaseModel):
     weights: List[float]
-    stats: List[StatRatio]
+    stats: List[dict]
     time_serie: dict
+    risk_profile: str
+    goal: str

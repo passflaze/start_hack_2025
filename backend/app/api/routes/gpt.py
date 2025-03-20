@@ -7,15 +7,48 @@ import ast
 import requests
 from app.pydantic_models import FinalResult
 import urllib.parse
+from stats import *
 
 router = APIRouter(prefix="/gpt")
 
 @router.post("/send_text", tags=["gpt"])
 def send_gpt(text: str):
+   
+      final_result = FinalResult()
+   
+   
+      query_info = f"""
+       between the tags you will hear a conversation between a financial advisor and his client.
+         the conversation may not be complete.
+       
+       <tag>
+       {text}
+       </tag>
 
+       From this conversation i want to know the client goals and the risk profile.
+       Return me a array with two strings inside, in the first one define the goal of the client,
+       in the second one his risk profile on a 0-10 scale.
+       
+       Example of the answer:
+       ["Retirement as early as possible", "7"]
+       
+       Another example
+       ["Buy an house for my brother", "5"]
+       
+       """
 
+      encoded_query_info = urllib.parse.quote(query_info)
 
-       query = f"""
+      url_info = f"https://idchat-api-containerapp01-dev.orangepebble-16234c4b.switzerlandnorth.azurecontainerapps.io/llm?query={encoded_query_info}"
+      response_info = requests.post(url_info)
+       
+      r_info = response_info.json()
+      r_info = ast.literal_eval(r_info["content"])
+       
+      final_result.goal = r_info[0]
+      final_result.risk_profile = r_info[1]
+
+      query = f"""
        you have to define an asset allocation given the information of the following text surrounded by <tag></tag>.
        Consider that the text is extracted from an actual conversation from a financial advisor and his client.
        the conversation may not be complete.
@@ -70,6 +103,78 @@ def send_gpt(text: str):
        0.01, 0.06, 0.02, 0.00, 0.05, 0.0, 0.0, 0.02, 0.04, 0.0] 
        """
 
+      encoded_query = urllib.parse.quote(query)
+
+      url = f"https://idchat-api-containerapp01-dev.orangepebble-16234c4b.switzerlandnorth.azurecontainerapps.io/llm?query={encoded_query}"
+       
+
+      response = requests.post(url)
+      r = response.json()
+       
+      from app.api.routes.historical import portfolio_builder
+       
+
+      string_weights = r["content"]
+
+       #final_result = FinalResult()
+
+      weights = ast.literal_eval(string_weights)
+      final_result.weights = weights
+       
+      portfolio = portfolio_builder(weights)
+      portfolio_json = portfolio.to_json()
+       
+      final_result.time_serie = portfolio_json
+       
+       
+      list_stats = [
+         get_sharpee_ratio(portfolio),
+         get_sortino_ratio(portfolio),
+         get_calmar_ratio(portfolio),
+         get_alpha(portfolio),
+         get_beta(portfolio),
+         get_treynor_ratio(portfolio),
+         get_omega_ratio(portfolio),
+         get_information_ratio(portfolio),
+         get_maximum_drawdown(portfolio),
+         get_total_return(portfolio),
+         get_value_at_risk(portfolio),
+      ]
+      
+      final_result.stats = list_stats
+
+    #portfolio builder ritorna un dataframe
+
+    #con il dataframe ottenuto chiamiamo le funzioni di calcolo delgi indici di simo
+
+    #convertiamo il dataframe in una lista di coppie per i grafici
+
+    #returniamo un pydantic
+
+
+
+def send_gpt(text: str):
+
+       query_2 = f"""
+       between the tags you will hear a conversation between a financial advisor and his client.
+         the conversation may not be complete.
+       
+       <tag>
+       {text}
+       </tag>
+
+       From this conversation i want to know the client goals and the risk profile.
+       Return me a array with two strings inside, in the first one define the goal of the client,
+       in the second one his risk profile on a 0-10 scale.
+       
+       Example of the answer:
+       ["Retirement as early as possible", "7"]
+       
+       Another example
+       ["Buy an house for my brother", "5"]
+       
+       """
+
        encoded_query = urllib.parse.quote(query)
 
        url = f"https://idchat-api-containerapp01-dev.orangepebble-16234c4b.switzerlandnorth.azurecontainerapps.io/llm?query={encoded_query}"
@@ -82,18 +187,3 @@ def send_gpt(text: str):
        
 
        string_weights = r["content"]
-
-       #final_result = FinalResult()
-
-
-       return string_weights
-       weights = ast.literal_eval(string_weights)
-    
-
-    #portfolio builder ritorna un dataframe
-
-    #con il dataframe ottenuto chiamiamo le funzioni di calcolo delgi indici di simo
-
-    #convertiamo il dataframe in una lista di coppie per i grafici
-
-    #returniamo un pydantic

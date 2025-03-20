@@ -83,7 +83,9 @@ def create_portfolio_time_series(init_amount, weights, asset_list, data_dir):
     
     return portfolio_df[['Portfolio']]
 
-def portfolio_builder(init_amount, weights):
+def portfolio_builder(weights):
+    
+    init_amount = 1000000
     
     data_directory = "app/files"  # Directory con i file pickle
     portfolio_series = create_portfolio_time_series(init_amount, weights, asset_list, data_directory)
