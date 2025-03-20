@@ -14,7 +14,7 @@ import {
   import {UserHeader} from "./common/UserHeader";
   
   let demoUser = {
-    name: "JACK MAGGIORE",
+    name: "Jack Major",
     age: 22,
     netWorth: "$1,000,000"
   }
@@ -24,7 +24,7 @@ import {
 
       <Container maxW="full">
         
-        < UserHeader user={demoUser} />
+        <UserHeader user={demoUser} />
   
         <SimpleGrid columns={{ base: 1, md: 1, lg: 2 }} spacing={4}>
           <PieChartComponent/>
