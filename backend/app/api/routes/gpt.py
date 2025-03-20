@@ -66,55 +66,55 @@ def send_gpt(text: str):
       query = f"""
        You must define an asset allocation based on the information provided in the text enclosed within <tag></tag>.  
 
-Consider that this text is an excerpt from an actual conversation between a financial advisor and their client.  
-The conversation may be incomplete.  
+        Consider that this text is an excerpt from an actual conversation between a financial advisor and their client.  
+        The conversation may be incomplete.  
 
-<tag>  
-{text}  
-</tag>  
+        <tag>  
+        {text}  
+        </tag>  
 
-If the provided information is insufficient, create a very generic asset allocation.  
+        If the provided information is insufficient, create a very generic asset allocation.  
 
-### **Instructions:**  
-1. Based on the information inside the <tag> section, determine the client's **risk profile**.  
-2. Define an **asset allocation** using the following assets:  
+        ### **Instructions:**  
+        1. Based on the information inside the <tag> section, determine the client's **risk profile**.  
+        2. Define an **asset allocation** using the following assets:  
 
-   - iShares Core S&P 500  
-   - iShares Core MSCI World  
-   - iShares Core MSCI Emerging Markets IMI  
-   - iShares Nasdaq 100  
-   - iShares MSCI ACWI  
-   - Vanguard FTSE All-World  
-   - iShares Core DAX  
-   - Lyxor Core STOXX Europe 600 (DR)  
-   - iShares Core MSCI Europe  
-   - Xtrackers MSCI USA  
-   - Xtrackers MSCI Emerging Markets  
-   - iShares Core EURO STOXX 50  
-   - Real Estate Sector  
-   - ETF Bond USA 7  
-   - ETF Bond USA 10  
-   - ETF Bond USA 15  
-   - ETF Bond USA 20  
-   - ETF Bond USA 30  
-   - ETF Inflation Adjusted USA 7  
-   - ETF Inflation Adjusted USA 15  
-   - Bitcoin  
-   - Gold  
-   - Silver  
-   - Crude Oil  
-   - Cash Liquidity  
+          - iShares Core S&P 500  
+          - iShares Core MSCI World  
+          - iShares Core MSCI Emerging Markets IMI  
+          - iShares Nasdaq 100  
+          - iShares MSCI ACWI  
+          - Vanguard FTSE All-World  
+          - iShares Core DAX  
+          - Lyxor Core STOXX Europe 600 (DR)  
+          - iShares Core MSCI Europe  
+          - Xtrackers MSCI USA  
+          - Xtrackers MSCI Emerging Markets  
+          - iShares Core EURO STOXX 50  
+          - Real Estate Sector  
+          - ETF Bond USA 7  
+          - ETF Bond USA 10  
+          - ETF Bond USA 15  
+          - ETF Bond USA 20  
+          - ETF Bond USA 30  
+          - ETF Inflation Adjusted USA 7  
+          - ETF Inflation Adjusted USA 15  
+          - Bitcoin  
+          - Gold  
+          - Silver  
+          - Crude Oil  
+          - Cash Liquidity  
 
-3. Assign a **weight** to each asset so that the sum of all weights is exactly **1**.  
+        3. Assign a **weight** to each asset so that the sum of all weights is exactly **1**.  
 
-### **Response Format (CRITICAL)**  
-Return only a **single array** of exactly **24 elements**, where each element represents the weight of the corresponding asset.  
+        ### **Response Format (CRITICAL)**  
+        Return only a **single array** of exactly **24 elements**, where each element represents the weight of the corresponding asset.  
 
- **DO NOT** include any extra text, explanations, or formatting. Your response must strictly follow this pattern:  
+        **DO NOT** include any extra text, explanations, or formatting. Your response must strictly follow this pattern:  
 
-```plaintext
-[0.1, 0.1, 0.2, 0.05, 0.00, 0.0, 0.1, 0.0, 0.05, 0.05, 0.0, 0.0, 0.1, 0.05, 0.0,
- 0.01, 0.06, 0.02, 0.00, 0.05, 0.0, 0.0, 0.02, 0.04] 
+        plaintext
+        [0.1, 0.1, 0.2, 0.05, 0.00, 0.0, 0.1, 0.0, 0.05, 0.05, 0.0, 0.0, 0.1, 0.05, 0.0,
+        0.01, 0.06, 0.02, 0.00, 0.05, 0.0, 0.0, 0.02, 0.04] 
        """
       
       encoded_query = urllib.parse.quote(query)
