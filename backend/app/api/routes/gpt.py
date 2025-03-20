@@ -25,7 +25,7 @@ router = APIRouter(prefix="/gpt")
 
 @router.post("/send_text", response_model=FinalResult, tags=["gpt"])
 def send_gpt(text: str):
-      
+      model = "GEMINI"
       print("Entered send gpt")
    
       #sentiment = get_sentiment_score(text)
@@ -61,100 +61,98 @@ def send_gpt(text: str):
       # r_info = response_info.json()
       # r_info = ast.literal_eval(r_info["content"])
        
-   
+
 
       query = f"""
-       you have to define an asset allocation given the information of the following text surrounded by <tag></tag>.
-       Consider that the text is extracted from an actual conversation from a financial advisor and his client.
-       the conversation may not be complete.
-       
-       <tag>
-       {text}
-       </tag>
+       You must define an asset allocation based on the information provided in the text enclosed within <tag></tag>.  
 
-       If you think this information is not complete, consider a very generic asset allocation, 
+Consider that this text is an excerpt from an actual conversation between a financial advisor and their client.  
+The conversation may be incomplete.  
 
-       Given this information between tags, you have to determine the client's profile risk and define
-       an asset allocation based on the following assets:
+<tag>  
+{text}  
+</tag>  
 
-       ['iShares Core S&P 500'], 
-       ['iShares Core MSCI World'], 
-       ['iShares Core MSCI Emerging Markets IMI'], 
-       ['iShares Nasdaq 100'], 
-       ['iShares MSCI ACWI'], 
-       ['Vanguard FTSE All-World'],
-       ['iShares Core DAX'], 
-       ['Lyxor Core STOXX Europe 600 (DR)'], 
-       ['iShares Core MSCI Europe'], 
-       ['Xtrackers MSCI USA'], 
-       ['Xtrackers MSCI Emerging Markets'], 
-       ['iShares Core EURO STOXX 50'], 
-       ["Real Estate Sector"],
-       ["ETF Bond USA 7"],  
-       ["ETF Bond USA 10"],  
-       ["ETF Bond USA 15"],  
-       ["ETF Bond USA 20"], 
-       ["ETF Bond USA 30"],  
-       ["ETF Inflation Adjusted USA 7",],
-       ["ETF Inflation Adjusted USA 15",],
-       ["Bitcoin",],
-       ["Gold",],
-       ["Silver",],
-       ["Crude Oil",],
-       ["Cash Liquidity",]
+If the provided information is insufficient, create a very generic asset allocation.  
 
-       for each asset, you should decide a weight in the portfolio.
-       the sum of all the weights should be 1.
+### **Instructions:**  
+1. Based on the information inside the <tag> section, determine the client's **risk profile**.  
+2. Define an **asset allocation** using the following assets:  
 
-       Return me only one array of 24 elements, where each element is the weight of an asset.
-       you can only return an answer like the following.
-       don't say anithing except the following array.
+   - iShares Core S&P 500  
+   - iShares Core MSCI World  
+   - iShares Core MSCI Emerging Markets IMI  
+   - iShares Nasdaq 100  
+   - iShares MSCI ACWI  
+   - Vanguard FTSE All-World  
+   - iShares Core DAX  
+   - Lyxor Core STOXX Europe 600 (DR)  
+   - iShares Core MSCI Europe  
+   - Xtrackers MSCI USA  
+   - Xtrackers MSCI Emerging Markets  
+   - iShares Core EURO STOXX 50  
+   - Real Estate Sector  
+   - ETF Bond USA 7  
+   - ETF Bond USA 10  
+   - ETF Bond USA 15  
+   - ETF Bond USA 20  
+   - ETF Bond USA 30  
+   - ETF Inflation Adjusted USA 7  
+   - ETF Inflation Adjusted USA 15  
+   - Bitcoin  
+   - Gold  
+   - Silver  
+   - Crude Oil  
+   - Cash Liquidity  
 
-       IT'S CRITICAL THAT YOU ANSWER WITH THIS PATTERN!!!!!!!!!!
-       DON'T WRITE ANYTHING ELSE
-       
-       
-       [0.1, 0.1, 0.2, 0.05, 0.00, 0.0, 0.1, 0.0, 0.05, 0.05, 0.0, 0.0, 0.1, 0.05, 0.0,
-       0.01, 0.06, 0.02, 0.00, 0.05, 0.0, 0.0, 0.02, 0.04] 
+3. Assign a **weight** to each asset so that the sum of all weights is exactly **1**.  
+
+### **Response Format (CRITICAL)**  
+Return only a **single array** of exactly **24 elements**, where each element represents the weight of the corresponding asset.  
+
+ **DO NOT** include any extra text, explanations, or formatting. Your response must strictly follow this pattern:  
+
+```plaintext
+[0.1, 0.1, 0.2, 0.05, 0.00, 0.0, 0.1, 0.0, 0.05, 0.05, 0.0, 0.0, 0.1, 0.05, 0.0,
+ 0.01, 0.06, 0.02, 0.00, 0.05, 0.0, 0.0, 0.02, 0.04] 
        """
-
+      
       encoded_query = urllib.parse.quote(query)
 
       response = client.models.generate_content(
       model="gemini-2.0-flash", contents=encoded_query
-        )
-      #url = f"https://idchat-api-containerapp01-dev.orangepebble-16234c4b.switzerlandnorth.azurecontainerapps.io/llm?query={encoded_query}"
-       
-
+      )
+      # url = f"https://idchat-api-containerapp01-dev.orangepebble-16234c4b.switzerlandnorth.azurecontainerapps.io/llm?query={encoded_query}"
+      # response = requests.post(url)
+      # str_weights = response.json()['content']
       str_weights = response.text
       
-
       from app.api.routes.historical import portfolio_builder
        
-
-
        #final_result = FinalResult()
 
       weights = ast.literal_eval(str_weights)
        
       portfolio = portfolio_builder(weights)
-      portfolio_list = portfolio.to_dict()
-      
-           
+
+      #portfolio_list = portfolio.to_dict()
+
+      portfolio['date'] = pd.to_datetime(portfolio.index)  # Ensure date is in datetime format
+
+      portfolio_list = [{'date': row[1], 'value': row[0]} for row in portfolio.itertuples(index=False)]           
        
-       
-      list_stats = [
+      list_stats1 = [
          get_sharpee_ratio(portfolio),
          get_sortino_ratio(portfolio),
          get_calmar_ratio(portfolio),
+         
+      ]
+
+      list_stats2 = [
+         
          get_alpha(portfolio),
-         get_beta(portfolio),
-         get_treynor_ratio(portfolio),
-         get_omega_ratio(portfolio),
-         get_information_ratio(portfolio),
          get_maximum_drawdown(portfolio),
          get_total_return(portfolio),
-         get_value_at_risk(portfolio),
       ]
 
       assets = []
@@ -167,7 +165,8 @@ def send_gpt(text: str):
       
       final_result = FinalResult(
               assets = assets,
-              stats =  list_stats,
+              stats1 =  list_stats1,
+              stats2 = list_stats2,
               time_serie =  portfolio_list,
               risk_profile = "null",#r_info[1],
               goal = "null"#r_info[0]
@@ -183,6 +182,8 @@ def send_gpt(text: str):
     #convertiamo il dataframe in una lista di coppie per i grafici
 
     #returniamo un pydantic
+
+
 
 
 

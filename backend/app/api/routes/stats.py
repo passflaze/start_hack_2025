@@ -26,71 +26,40 @@ def get_sharpee_ratio(portfolio_data):
     portfolio_data["returns"] = portfolio_data["portfolio_value"].pct_change().dropna()
     
     sharpe = qs.stats.sharpe(portfolio_data["returns"], rf=RISK_FREE_RATE)
-    return {"Sharpe Ratio": sharpe}
+    return {"Sharpe Ratio": float(sharpe)}
 
 def get_sortino_ratio(portfolio_data):
     
     portfolio_data["returns"] = portfolio_data["portfolio_value"].pct_change().dropna()
     sortino = qs.stats.sortino(portfolio_data["returns"], rf=RISK_FREE_RATE)
-    return {"Sortino Ratio": sortino}
+    return {"Sortino Ratio": float(sortino)}
 
 def get_calmar_ratio(portfolio_data):
     
     portfolio_data["returns"] = portfolio_data["portfolio_value"].pct_change().dropna()
     calmar = qs.stats.calmar(portfolio_data["returns"])
-    return {"Calmar Ratio": calmar}
+    return {"Calmar Ratio": float(calmar)}
 
 def get_alpha(portfolio_data):
     
     portfolio_data["returns"] = portfolio_data["portfolio_value"].pct_change().dropna()
     market_returns = portfolio_data["returns"]  # Sostituisci con benchmark reale se disponibile
     alpha = ep.alpha(portfolio_data["returns"], market_returns, risk_free=RISK_FREE_RATE)
-    return {"Alpha": alpha}
+    return {"Alpha": float(alpha)}
 
-def get_beta(portfolio_data):
-    
-    portfolio_data["returns"] = portfolio_data["portfolio_value"].pct_change().dropna()
-    market_returns = portfolio_data["returns"]
-    beta = ep.beta(portfolio_data["returns"], market_returns)
-    return {"Beta": beta}
-
-def get_treynor_ratio(portfolio_data):
-    
-    return {"treynor ratio": 1.0}
-
-def get_omega_ratio(portfolio_data):
-    
-    return {"omega ratio": 1.0}
-
-def get_information_ratio(portfolio_data):
-    
-    return {"inf ratio": 1.0}
 
 def get_maximum_drawdown(portfolio_data):
     
     portfolio_data["returns"] = portfolio_data["portfolio_value"].pct_change().dropna()
     
     max_drawdown = qs.stats.max_drawdown(portfolio_data["returns"])
-    return {"Maximum Drawdown": max_drawdown}
+    return {"Maximum Drawdown": float(max_drawdown)}
 
 def get_total_return(portfolio_data):
     
     portfolio_data["returns"] = portfolio_data["portfolio_value"].pct_change().dropna()
     
     total_return = qs.stats.comp(portfolio_data["returns"])
-    return {"Total Return": total_return}
+    return {"Total Return": float(total_return)}
 
-def get_value_at_risk(portfolio_data):
-
-    return {"95% Value at Risk (VaR)" : 1.1}
-    
-    portfolio_data["returns"] = portfolio_data["portfolio_value"].pct_change().dropna()
-    
-    model = arch_model(portfolio_data["returns"], vol="Garch", p=1, q=1)
-    res = model.fit(disp="off")
-    forecast_vol = res.conditional_volatility[-1]
-
-    # The 1.645 quantile is the critical value for a normal distribution at 95% confidence
-    var_95_garch = -1.645 * forecast_vol 
-    return {"95% Value at Risk (VaR)": var_95_garch}
 

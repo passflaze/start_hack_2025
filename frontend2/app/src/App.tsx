@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { ChakraProvider, Heading } from '@chakra-ui/react'
 import Charts from './components/Charts'
-import DeepgramTranscription from './components/common/DeepgramTranscription'
 import { UserHeader } from './components/common/UserHeader'
 import { User } from 'lucide-react'
 

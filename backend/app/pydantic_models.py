@@ -19,7 +19,8 @@ class Asset(BaseModel):
 
 class FinalResult(BaseModel):
     assets: List[Asset]
-    stats: List[dict]
-    time_serie: dict
+    stats1: List[dict]
+    stats2: List[dict]
+    time_serie: List[dict]
     risk_profile: str
     goal: str

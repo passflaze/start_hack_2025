@@ -44,6 +44,12 @@ def load_pickle(file_path):
 def portfolio_builder(weights):
     
     portfolio_df = load_pickle("./app/files/portfolio.pkl")
+    portfolio_df = portfolio_df.resample('W').last()
+
+    most_recent_year = portfolio_df.index.max().year
+    portfolio_df =  portfolio_df[portfolio_df.index.year >= most_recent_year - 3]
+
+
     weighted_df = portfolio_df * weights
 
     portfolio_df = pd.DataFrame(index = weighted_df.index)

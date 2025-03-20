@@ -5,8 +5,9 @@
 import type { Asset } from './Asset';
 export type FinalResult = {
     assets: Array<Asset>;
-    stats: Array<Record<string, any>>;
-    time_serie: Record<string, any>;
+    stats1: Array<Record<string, any>>;
+    stats2: Array<Record<string, any>>;
+    time_serie: Array<Record<string, any>>;
     risk_profile: string;
     goal: string;
 };
