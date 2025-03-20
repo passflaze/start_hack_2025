@@ -9,7 +9,8 @@ services:
       - seven_network
     #env_file:
     #  - .env
-    # environment:
+    environment:
+        DEEPGRAM_API_KEY: 2855fcd8ca79dce205acf7139a218c958c31abea
     #   DB_HOST: ${DB_HOST?Variable not set}
     #   DB_USER: ${DB_USER?Variable not set}
     #   DB_PASSWORD: ${DB_PASSWORD?Variable not set}
