@@ -142,12 +142,13 @@ def send_gpt(text: str):
          get_value_at_risk(portfolio),
       ]
       
-      final_result = FinalResult(weights = weights
-        stats =  list_stats
-        time_serie =  portfolio_json
-        risk_profile = r_info[1]
-        goal = r_info[0]
-      )
+      final_result = FinalResult(
+              weights = weights,
+              stats =  list_stats,
+              time_serie =  portfolio_json,
+              risk_profile = r_info[1],
+              goal = r_info[0]
+              )
       
       return final_result
 
