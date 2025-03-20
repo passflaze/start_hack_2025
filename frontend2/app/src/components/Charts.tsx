@@ -17,6 +17,7 @@ import {
     Thead,
     Tr,
   } from "@chakra-ui/react";
+  
   import {PieChartComponent} from "../../../../frontend2/app/src/components/charts/PieChart";
   import {UserHeader} from "./common/UserHeader";
 import { Area, AreaChart, Bar, BarChart, Line, LineChart, Pie, PieChart, ResponsiveContainer } from "recharts";

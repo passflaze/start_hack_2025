@@ -150,6 +150,8 @@ def send_gpt(text: str):
               goal = r_info[0]
               )
       
+      print("ciao!")
+      return "ciao!!!"
       return final_result
 
     #portfolio builder ritorna un dataframe
