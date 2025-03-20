@@ -138,17 +138,18 @@ def send_gpt(text: str):
          get_omega_ratio(portfolio),
          get_information_ratio(portfolio),
          get_maximum_drawdown(portfolio),
-         get_total_return(portfolio),
+         #get_total_return(portfolio),
          get_value_at_risk(portfolio),
       ]
       
-      final_result.stats = FinalResult(
-        weights: weights
-        stats: list_stats
-        time_serie: portfolio_json
-        risk_profile: r_info[1]
-        goal: r_info[0]
+      final_result = FinalResult(weights = weights
+        stats =  list_stats
+        time_serie =  portfolio_json
+        risk_profile = r_info[1]
+        goal = r_info[0]
       )
+      
+      return final_result
 
     #portfolio builder ritorna un dataframe
 
@@ -160,37 +161,3 @@ def send_gpt(text: str):
 
 
 
-def send_gpt(text: str):
-
-       query_2 = f"""
-       between the tags you will hear a conversation between a financial advisor and his client.
-         the conversation may not be complete.
-       
-       <tag>
-       {text}
-       </tag>
-
-       From this conversation i want to know the client goals and the risk profile.
-       Return me a array with two strings inside, in the first one define the goal of the client,
-       in the second one his risk profile on a 0-10 scale.
-       
-       Example of the answer:
-       ["Retirement as early as possible", "7"]
-       
-       Another example
-       ["Buy an house for my brother", "5"]
-       
-       """
-
-       encoded_query = urllib.parse.quote(query)
-
-       url = f"https://idchat-api-containerapp01-dev.orangepebble-16234c4b.switzerlandnorth.azurecontainerapps.io/llm?query={encoded_query}"
-
-
-       response = requests.post(url)
-       r = response.json()
-       
-       from app.api.routes.historical import portfolio_builder
-       
-
-       string_weights = r["content"]
