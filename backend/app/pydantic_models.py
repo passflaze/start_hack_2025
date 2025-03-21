@@ -24,3 +24,4 @@ class FinalResult(BaseModel):
     time_serie: List[dict]
     risk_profile: str
     goal: str
+    info: str

@@ -13,13 +13,13 @@ from app.api.routes.historical import asset_list
 
 
 api_key_gemini = "AIzaSyDwep2fdGC4e8OZ1O46yhCxqq9pUgyVgB0"
-
+api_key_gemini_luca = "AIzaSyAe1OBVtcg7UZFrEs8FdWcNQlouFgO"
 
 
 from google import genai
 
 client = genai.Client(api_key=api_key_gemini)
-
+client2 = genai.Client(api_key=api_key_gemini_luca)
 
 router = APIRouter(prefix="/gpt")
 
@@ -28,40 +28,28 @@ def send_gpt(text: str):
       model = "GEMINI"
       print("Entered send gpt")
    
-      #sentiment = get_sentiment_score(text)
    
-      # query_info = f"""
-      
-      #  between the tags you will hear a conversation between a financial advisor and his client.
-      #    the conversation may not be complete.
-       
-      #  <tag>
-      #  {text}
-      #  </tag>
+      query_info = f"""
+      Between the tags, you will find a conversation between a financial advisor and their client.  
+        This conversation may be incomplete.  
 
-      #  From this conversation i want to know the client goals and the risk profile.
-      #  Return me a array with two strings inside, in the first one define the goal of the client,
-      #  in the second one his risk profile on a 0-10 scale.
-       
-      #  Example of the answer:
-      #  ["Retirement as early as possible", "7"]
-       
-      #  Another example
-      #  ["Buy an house for my brother", "5"]
-       
+        <tag>  
+        {text}  
+        </tag>  
+
+      Please write a summary that describes the client by a fiancial point of view.
+      if you can, describe the client's goals and risk profile.
       #  """
 
-      # encoded_query_info = urllib.parse.quote(query_info)
+      encoded_query_info = urllib.parse.quote(query_info)
 
       
-
-      # url_info = f"https://idchat-api-containerapp01-dev.orangepebble-16234c4b.switzerlandnorth.azurecontainerapps.io/llm?query={encoded_query_info}"
-      # response_info = requests.post(url_info)
-       
-      # r_info = response_info.json()
-      # r_info = ast.literal_eval(r_info["content"])
-       
-
+      response2 = client.models.generate_content(
+      model="gemini-2.0-flash", contents=encoded_query
+      )
+      
+      info_client = response2.text
+      
 
       query = f"""
        You must define an asset allocation based on the information provided in the text enclosed within <tag></tag>.  
@@ -169,7 +157,8 @@ def send_gpt(text: str):
               stats2 = list_stats2,
               time_serie =  portfolio_list,
               risk_profile = "null",#r_info[1],
-              goal = "null"#r_info[0]
+              goal = "null",#r_info[0]
+              info = info_client
           )
       
       
