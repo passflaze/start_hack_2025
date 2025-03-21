@@ -33,21 +33,16 @@ Ensure you have the following installed:
 - [Node.js](https://nodejs.org/)
 
 ### Running Locally
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/financial-advisor-ai.git
-   cd financial-advisor-ai
-   ```
-2. Build and start the backend using Docker Compose:
+1. Build and start the backend using Docker Compose:
    ```bash
    docker compose up --build
    ```
-3. Install frontend dependencies:
+2. Install frontend dependencies:
    ```bash
    cd frontend
    npm install
    ```
-4. Start the frontend:
+3. Start the frontend:
    ```bash
    npm run dev
    ```
