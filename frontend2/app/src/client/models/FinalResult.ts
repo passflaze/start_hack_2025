@@ -10,5 +10,6 @@ export type FinalResult = {
     time_serie: Array<Record<string, any>>;
     risk_profile: string;
     goal: string;
+    info: string;
 };
 

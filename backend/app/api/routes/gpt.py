@@ -13,42 +13,40 @@ from app.api.routes.historical import asset_list
 
 
 api_key_gemini = "AIzaSyDwep2fdGC4e8OZ1O46yhCxqq9pUgyVgB0"
-<<<<<<< Updated upstream
-api_key_gemini_luca = "AIzaSyAe1OBVtcg7UZFrEs8FdWcNQlouFgO"
-=======
-api_key_gemini_simo = "AIzaSyAe1OBVtcg7UZFrEs8FdWcNQlouFgO"
->>>>>>> Stashed changes
+api_key_gemini_luca = "AIzaSyDwep2fdGC4e8OZ1O46yhCxqq9pUgyVgB0"
 
 
 from google import genai
 
 client = genai.Client(api_key=api_key_gemini)
-<<<<<<< Updated upstream
 client2 = genai.Client(api_key=api_key_gemini_luca)
-=======
-client2 = genai.Client(api_key = api_key_gemini_simo)
->>>>>>> Stashed changes
 
 router = APIRouter(prefix="/gpt")
 
 @router.post("/send_text", response_model=FinalResult, tags=["gpt"])
 def send_gpt(text: str):
       model = "GEMINI"
-      print("Entered send gpt")
    
-<<<<<<< Updated upstream
    
       query_info = f"""
       Between the tags, you will find a conversation between a financial advisor and their client.  
-        This conversation may be incomplete.  
+This conversation may be incomplete.  
 
-        <tag>  
-        {text}  
-        </tag>  
+<tag>  
+{text}  
+</tag>  
 
-      Please write a summary that describes the client by a fiancial point of view.
-      if you can, describe the client's goals and risk profile.
-      #  """
+### **Your Task:**  
+Analyze the conversation and summarize the client from a **financial perspective** by identifying:  
+1. **Financial situation** (if mentioned).  
+2. **Investment goals** (if available).  
+3. **Risk profile** (if possible).  
+
+### **Response Format (STRICT RULES)**  
+- If sufficient information is available, return a **concise summary** in plain text.  
+- If the conversation lacks sufficient details, return exactly 'No info yet'.
+
+       """
 
       encoded_query_info = urllib.parse.quote(query_info)
 
@@ -59,31 +57,6 @@ def send_gpt(text: str):
       
       info_client = response2.text
       
-=======
-      
-      query_info = f"""
-      
-      I will give you between tags the conversation between a wealth manager and his client.
-      
-<tag>
-{text}  
-</tag>  
-
-please write me a profile and a descruption of the client.
-if you can, descripe how he'd like to invest his money.
-return me ONLY a string of text please.
-
-       """
-
-      encoded_query_info = urllib.parse.quote(query_info)
-      response = client2.models.generate_content(
-      model="gemini-2.0-flash", contents=encoded_query_info
-      )
-
-      info_user = response.text
-
-
->>>>>>> Stashed changes
 
       query = f"""
        You must define an asset allocation based on the information provided in the text enclosed within <tag></tag>.  
@@ -192,11 +165,7 @@ return me ONLY a string of text please.
               time_serie =  portfolio_list,
               risk_profile = "null",#r_info[1],
               goal = "null",#r_info[0]
-<<<<<<< Updated upstream
               info = info_client
-=======
-              info = info_user
->>>>>>> Stashed changes
           )
       
       

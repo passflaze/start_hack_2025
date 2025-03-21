@@ -1,10 +1,13 @@
 import {
   Box,
   Button,
+  Card,
+  Flex,
   Container,
   Grid,
   GridItem,
   Heading,
+  HStack,
   SimpleGrid,
   Tab,
   Table,
@@ -17,8 +20,20 @@ import {
   Th,
   Thead,
   Tr,
+  IconButton,
+  Drawer,
+  DrawerContent,
+  DrawerOverlay,
+  Image,
+  useDisclosure,
+  useColorModeValue,
+  DrawerCloseButton,
+  DrawerBody,
 } from "@chakra-ui/react";
 import { FaMicrophone } from "react-icons/fa6";
+import { format } from "date-fns";
+import { FiLogOut, FiMenu } from 'react-icons/fi'
+
 
 import { PieChartComponent } from "../../../../frontend2/app/src/components/charts/PieChart";
 import { UserHeader } from "./common/UserHeader";
@@ -43,6 +58,7 @@ import { useEffect, useRef, useState } from "react";
 import { FinalResult, GptService } from "@/client";
 import React from "react";
 import { ChartConfig, ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent } from "./ui/chart";
+import SidebarItems from "./common/SidebarItems";
 
 let demoUser = {
   name: "Jack Major",
@@ -104,18 +120,14 @@ function Charts() {
     stats1: [
       { "Sortino Ratio": 0 },
       { "Calmar Ratio": 0 },
-
       { "treynor ratio": 0 },
-      { "omega ratio": 0 },
-      { "inf ratio": 0 },
 
-      { "Total Return": 0 },
-      { "95% Value at Risk (VaR)": 0 },
     ],
     stats2: [{ Alpha: 0 }, { Beta: 0 }, { "Maximum Drawdown": 0 }],
     time_serie: [{ date: 0, value: 0 }],
     risk_profile: "",
     goal: "",
+    info: ""
   };
 
   const [results, setResults] = useState<FinalResult>(defaultFinalResult);
@@ -256,10 +268,103 @@ const start = () => {
 
   const [color, setColor] = useState<string>("black")
 
+  const bgColor = useColorModeValue('ui.white', 'ui.dark');
+  const textColor = useColorModeValue('ui.dark', 'ui.white');
+  const secBgColor = useColorModeValue('ui.secondary', 'ui.darkSlate');
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
-    <Container maxW="full">
-      <Box height="100vh" display="flex" flexDirection="column">
-        <Button py={2} color={color} onClick={start}><FaMicrophone /><Text className="ml-2">Start Recording</Text></Button>
+    <Flex maxW="full" >
+      <Flex minW="12%" >
+      <IconButton
+        
+        display={{ base: 'flex', md: 'none' }}
+        aria-label="Open Menu"
+        position="fixed"
+        fontSize="20px"
+        m={4}
+        zIndex={10}
+        icon={<FiMenu />}
+      />
+      <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
+        <DrawerOverlay />
+        <DrawerContent maxW="220px">
+          <DrawerCloseButton />
+          <DrawerBody py={6}>
+            <Flex flexDir="column" justify="space-between" h="full">
+              <Box>
+                <SidebarItems />
+                <Flex
+                  as="button"
+                  p={2}
+                  color="ui.danger"
+                  fontWeight="bold"
+                  alignItems="center"
+                >
+                  <FiLogOut />
+                  <Text ml={2}>Log out</Text>
+                </Flex>
+              </Box>
+                <Text color={textColor} noOfLines={2} fontSize="xs" p={2}>
+                  Logged in as: Walter Wannacio
+                </Text>
+              
+            </Flex>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
+
+      {/* Desktop */}
+      <Box
+        bg={bgColor}
+        h="100vh"
+        position="fixed"
+        top="100"
+        left="0"
+        w={{ md: "220px" }}
+        display={{ base: 'none', md: 'block' }}
+        zIndex={10}
+        overflowY="auto"
+        p={2}
+      >
+        <Flex
+          flexDir="column"
+          justify="space-between"
+          bg={secBgColor}
+          p={3}
+          borderRadius={12}
+          h="calc(88vh - 16px)"
+        >
+          <Box>
+            <SidebarItems />
+            <Flex
+              as="button"
+              
+              p={2}
+              color="ui.danger"
+              fontWeight="bold"
+              alignItems="center"
+              >
+              <FiLogOut />
+              <Text ml={2}>Log out</Text>
+            </Flex>
+          </Box>
+            <Text
+            color="gray.600"
+              className="text-xs text-gray-500"
+            >
+              Logged in as: Walter Wannacio
+            </Text>
+        </Flex>
+      </Box>
+      
+      {/* Spacer to push content to the right on desktop */}
+      <Box display={{ base: 'none', md: 'block' }} w="220px" flexShrink={0} />
+      </Flex>
+
+
+      <Box height="100vh" display="flex" minW="66%" mr={4} flexDirection="column">
+        <Button py={2} mx={3} color={color} onClick={start}><FaMicrophone /><Text className="ml-2">Start Recording</Text></Button>
         {/* Chart Grid */}
         <SimpleGrid
           columns={{ base: 1, md: 1, lg: 2 }}
@@ -269,7 +374,7 @@ const start = () => {
           p={4}
         >
           {/* Pie Chart */}
-          <GridItem bg="white" p={4} borderRadius="lg" boxShadow="md">
+          <GridItem bg="white" p={4} borderRadius="lg" boxShadow="md" h={"90%"}>
             <Heading size="md" mb={4} color="gray.600">
               Asset Allocation
             </Heading>
@@ -287,7 +392,7 @@ const start = () => {
                     nameKey="label"
                     cx="50%"
                     cy="50%"
-                    outerRadius={180}
+                    outerRadius={150}
                   >
                     {results.assets.map((entry, index) => (
                       <Cell
@@ -323,19 +428,21 @@ const start = () => {
           </GridItem>
 
           {/* Area Chart */}
-          <GridItem bg="white" p={4} borderRadius="lg" boxShadow="md">
+          <GridItem bg="white" p={4} borderRadius="lg" boxShadow="md" h={"90%"}>
             <Heading size="md" mb={4} color="gray.600">
               Portfolio Backtest
             </Heading>
             {results && (
               <ChartContainer config={chartConfig}>
                 <AreaChart data={results.time_serie}>
-                  <CartesianGrid vertical={false} />
+                  <CartesianGrid />
                   <XAxis
                     dataKey="date"
                     tickLine={false}
-                    axisLine={false}
+                    axisLine={true}
                     tickMargin={8}
+                    tickFormatter={(value) => format(new Date(value), 'MMM dd')}
+
                   />
                   <ChartTooltip
                     cursor={false}
@@ -357,7 +464,7 @@ const start = () => {
             <Heading size="md" mb={4} color="gray.600">
               Financial Indexes
             </Heading>
-            <Table>
+            <Table size={'sm'}>
               <Thead>
                 <Th borderRight="1px solid" borderColor="gray.200">
                   Index
@@ -387,7 +494,7 @@ const start = () => {
             <Heading size="md" mb={4} color="gray.600">
               Portfolio Metric
             </Heading>
-            <Table>
+            <Table size={'sm'}>
               <Thead>
                 <Th borderRight="1px solid" borderColor="gray.200">
                   Metric
@@ -413,7 +520,23 @@ const start = () => {
           </GridItem>
         </SimpleGrid>
       </Box>
-    </Container>
+      
+      <Flex minW={"20%"}>
+      <Card className='flex-row h-[88.5vh] rounded-md'>
+        <div className ="w-95 relative z-0" mb={"4em"}>
+        <Heading size="md"  p={4} color="gray.600">
+              Client Profile
+            </Heading>
+            <p className="px-4 italic text-gray-500 text-justify mr-3">
+                {results.info}
+        </p>
+        </div>
+        
+
+        
+      </Card>
+      </Flex>
+    </Flex>
   );
 }
 

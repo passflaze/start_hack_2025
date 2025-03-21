@@ -25,10 +25,12 @@ export function UserHeader({ user, className }: UserHeaderProps) {
     <Card className={`bg-gradient-to-r from-primary/5 to-primary/10 p-6 mb-3 ${className}`}>
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <div>
+             
+            <div className="text-sm text-gray-500">
+            <span className="mr-2">Customer:</span>
         <div className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">
-              {user.name}
-            </div><div className="text-sm text-gray-500">
-            <span className="mr-2">Age: {user.age}</span>
+        {user.name}
+        </div>
           </div>
         </div>
         <div className="flex items-center">

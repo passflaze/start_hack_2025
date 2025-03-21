@@ -5,7 +5,7 @@ import { UserHeader } from './components/common/UserHeader'
 import { User } from 'lucide-react'
 
 let demoUser = {
-  name: "JACK MAGGIORE",
+  name: "MR. RANFONI",
   age: 22,
   netWorth: "$1,000,000"
 }
@@ -19,13 +19,10 @@ function App() {
     <>
     
     <UserHeader user={demoUser}/>
-    <HStack>
+    
       <Charts/>
-      <Flex w={"25%"}>
-      <Card></Card>
-      </Flex>
-      </HStack>
-     {/* Hello World <DeepgramTranscription/> */}
+     
+     
     </>
     
   )
