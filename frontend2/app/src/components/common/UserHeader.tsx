@@ -13,17 +13,16 @@ export interface UserHeaderProps {
     age: number;
     netWorth: string;
   };
-  initializeTranscription: () => void
   className?: string;
 }
 
-export function UserHeader({ user, className, initializeTranscription }: UserHeaderProps) {
+export function UserHeader({ user, className }: UserHeaderProps) {
   
 
 
 
   return (
-    <Card className={`bg-gradient-to-r from-primary/5 to-primary/10 p-6 mb-6 ${className}`}>
+    <Card className={`bg-gradient-to-r from-primary/5 to-primary/10 p-6 mb-3 ${className}`}>
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <div>
         <div className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-600">
@@ -40,10 +39,6 @@ export function UserHeader({ user, className, initializeTranscription }: UserHea
             </div>
           </div>
         <div className="flex items-center ml-4 mr-4 ">
-          
-        <Button className="ml-4 mr-4 hover:bg-amber-400 " >
-          <h2 className="" onClick={initializeTranscription}> REC</h2>
-          </Button>
         </div>
         </div>
       </div>

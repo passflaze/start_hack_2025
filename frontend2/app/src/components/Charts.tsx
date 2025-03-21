@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Container,
   Grid,
   GridItem,
@@ -28,6 +29,7 @@ import {
   CartesianGrid,
   Cell,
   Label,
+  Legend,
   Line,
   LineChart,
   Pie,
@@ -38,7 +40,7 @@ import {
 import { useEffect, useState } from "react";
 import { FinalResult, GptService } from "@/client";
 import React from "react";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "./ui/chart";
+import { ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent } from "./ui/chart";
 
 let demoUser = {
   name: "Jack Major",
@@ -254,17 +256,13 @@ function Charts() {
   return (
     <Container maxW="full">
       <Box height="100vh" display="flex" flexDirection="column">
-        <UserHeader
-          user={demoUser}
-          initializeTranscription={initializeTranscription}
-        />
-
+        
         {/* Chart Grid */}
         <SimpleGrid
           columns={{ base: 1, md: 1, lg: 2 }}
           flex={1}
           templateColumns="repeat(2, 1fr)"
-          gap={4}
+          gap={2}
           p={4}
         >
           {/* Pie Chart */}
@@ -279,13 +277,14 @@ function Charts() {
                     cursor={false}
                     content={<ChartTooltipContent hideLabel />}
                   />
+                  
                   <Pie
                     data={results.assets}
                     dataKey="weight"
                     nameKey="label"
                     cx="50%"
                     cy="50%"
-                    outerRadius={200}
+                    outerRadius={180}
                   >
                     {results.assets.map((entry, index) => (
                       <Cell
@@ -315,6 +314,7 @@ function Charts() {
                     />
                   </Pie>
                 </PieChart>
+                
               </ChartContainer>
             )}
           </GridItem>
@@ -350,7 +350,7 @@ function Charts() {
           </GridItem>
 
           {/* Line Chart */}
-          <GridItem bg="white" p={4} borderRadius="lg" boxShadow="md">
+          <GridItem bg="white" p={4} borderRadius="lg" boxShadow="md" h={"70%"}>
             <Heading size="md" mb={4} color="gray.600">
               Financial Indexes
             </Heading>
@@ -380,7 +380,7 @@ function Charts() {
           </GridItem>
 
           {/* Bar Chart */}
-          <GridItem bg="white" p={4} borderRadius="lg" boxShadow="md">
+          <GridItem bg="white" p={4} borderRadius="lg" boxShadow="md" h={"70%"}>
             <Heading size="md" mb={4} color="gray.600">
               Portfolio Metric
             </Heading>
