@@ -54,7 +54,7 @@ def send_gpt(text: str):
 
       
       response2 = client.models.generate_content(
-      model="gemini-2.0-flash", contents=encoded_query
+      model="gemini-2.0-flash", contents=encoded_query_info
       )
       
       info_client = response2.text
