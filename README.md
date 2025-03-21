@@ -1,7 +1,18 @@
-# EchoAnalytics®
+# EchoAnalytics® - StartHack Project 2025
 
 ## Overview
 This application listens to conversations between a financial advisor and a client via microphone input. It then predicts the optimal asset allocation, performs a backtest, calculates financial metrics and indexes, and generates a user profile text, updating the output in real-time as the conversation goes on.
+
+## Team
+EchoAnalytics was developed with during March 19-20-21 in [Saint Gallen](https://www.startglobal.org/start-hack/what-is-hack)
+
+[Leonardo Sinibaldi](https://www.linkedin.com/in/leonardo-sinibaldi-2a7414270/)
+
+[Simone Zani](https://www.linkedin.com/in/simonezani35/)
+
+[Giacomo Maggiore](https://www.linkedin.com/in/giacomo-maggiore-499994263/)
+
+[Simone Ranfoni](https://www.linkedin.com/in/simoneranfoni/)
 
 ## Tech Stack
 - **Frontend**: React, Tailwind CSS
