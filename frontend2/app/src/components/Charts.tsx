@@ -18,6 +18,7 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
+import { FaMicrophone } from "react-icons/fa6";
 
 import { PieChartComponent } from "../../../../frontend2/app/src/components/charts/PieChart";
 import { UserHeader } from "./common/UserHeader";
@@ -28,6 +29,7 @@ import {
   BarChart,
   CartesianGrid,
   Cell,
+  Text,
   Label,
   Legend,
   Line,
@@ -37,10 +39,10 @@ import {
   ResponsiveContainer,
   XAxis,
 } from "recharts";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FinalResult, GptService } from "@/client";
 import React from "react";
-import { ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent } from "./ui/chart";
+import { ChartConfig, ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent } from "./ui/chart";
 
 let demoUser = {
   name: "Jack Major",
@@ -121,84 +123,83 @@ function Charts() {
     useState<string>("Disconnected");
   const [transcript, setTranscript] = useState<string>("");
 
-  let mediaRecorder: MediaRecorder | undefined;
-  let socket: WebSocket | undefined;
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+const socketRef = useRef<WebSocket | null>(null);
 
-  const initializeTranscription = async (): Promise<void> => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+const initializeTranscription = async (): Promise<void> => {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
-      mediaRecorder = new MediaRecorder(stream);
+    mediaRecorderRef.current = new MediaRecorder(stream);
+    socketRef.current = new WebSocket("wss://api.deepgram.com/v1/listen", [
+      "token",
+      "cf7588e948486a9a5fabfcc45e8baff9a9c2ff8c",
+    ]);
 
-      socket = new WebSocket("wss://api.deepgram.com/v1/listen", [
-        "token",
-        "cf7588e948486a9a5fabfcc45e8baff9a9c2ff8c",
-      ]);
+    const mediaRecorder = mediaRecorderRef.current;
+    const socket = socketRef.current;
 
-      // WebSocket event handlers
-      socket.onopen = (): void => {
-        console.log({ event: "onopen" });
-        setConnectionStatus("Connected");
+    socket.onopen = (): void => {
+      console.log({ event: "onopen" });
+      setConnectionStatus("Connected");
 
-        if (mediaRecorder) {
-          mediaRecorder.addEventListener(
-            "dataavailable",
-            (event: BlobEvent) => {
-              if (
-                event.data.size > 0 &&
-                socket &&
-                socket.readyState === WebSocket.OPEN
-              ) {
-                socket.send(event.data);
-              }
-            }
-          );
+      if (mediaRecorder) {
+        mediaRecorder.addEventListener("dataavailable", (event: BlobEvent) => {
+          if (event.data.size > 0 && socket && socket.readyState === WebSocket.OPEN) {
+            socket.send(event.data);
+          }
+        });
 
-          mediaRecorder.start(250);
-        }
-      };
-
-      socket.onmessage = (message: MessageEvent): void => {
-        console.log({ event: "onmessage", message });
-        const received: DeepgramResponse = JSON.parse(message.data);
-        const receivedTranscript = received.channel.alternatives[0].transcript;
-
-        if (receivedTranscript && received.is_final) {
-          setTranscript(
-            (prevTranscript) => prevTranscript + receivedTranscript + " "
-          );
-        }
-      };
-
-      socket.onclose = (): void => {
-        console.log({ event: "onclose" });
-        setConnectionStatus("Disconnected");
-      };
-
-      socket.onerror = (error: Event): void => {
-        console.log({ event: "onerror", error });
-        setConnectionStatus("Error connecting");
-      };
-    } catch (error) {
-      console.error("Error initializing transcription:", error);
-      setConnectionStatus(
-        `Error: ${error instanceof Error ? error.message : String(error)}`
-      );
-    }
-  };
-
-  useEffect(() => {
-    // Cleanup function
-    return () => {
-      if (mediaRecorder && mediaRecorder.state !== "inactive") {
-        mediaRecorder.stop();
-      }
-
-      if (socket && socket.readyState === WebSocket.OPEN) {
-        socket.close();
+        mediaRecorder.start(250);
       }
     };
-  }, []);
+
+    socket.onmessage = (message: MessageEvent): void => {
+      console.log({ event: "onmessage", message });
+      const received: DeepgramResponse = JSON.parse(message.data);
+      const receivedTranscript = received.channel.alternatives[0].transcript;
+
+      if (receivedTranscript && received.is_final) {
+        setTranscript((prevTranscript) => prevTranscript + receivedTranscript + " ");
+      }
+    };
+
+    socket.onclose = (): void => {
+      console.log({ event: "onclose" });
+      setConnectionStatus("Disconnected");
+    };
+
+    socket.onerror = (error: Event): void => {
+      console.log({ event: "onerror", error });
+      setConnectionStatus("Error connecting");
+    };
+  } catch (error) {
+    console.error("Error initializing transcription:", error);
+    setConnectionStatus(`Error: ${error instanceof Error ? error.message : String(error)}`);
+  }
+};
+
+const stopTranscription = () => {
+  if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
+    mediaRecorderRef.current.stop();
+    mediaRecorderRef.current.stream.getTracks().forEach((track) => track.stop()); // Stop the audio stream
+  }
+
+  if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+    socketRef.current.close();
+  }
+
+  setColor("black");
+};
+
+const start = () => {
+  if (color === "black") {
+    initializeTranscription();
+    setColor("red");
+  } else {
+    stopTranscription();
+  }
+};
 
   useEffect(() => {
     const sendGPT = async () => {
@@ -253,10 +254,12 @@ function Charts() {
     "#FFEB3B",
   ];
 
+  const [color, setColor] = useState<string>("black")
+
   return (
     <Container maxW="full">
       <Box height="100vh" display="flex" flexDirection="column">
-        
+        <Button py={2} color={color} onClick={start}><FaMicrophone /><Text className="ml-2">Start Recording</Text></Button>
         {/* Chart Grid */}
         <SimpleGrid
           columns={{ base: 1, md: 1, lg: 2 }}
