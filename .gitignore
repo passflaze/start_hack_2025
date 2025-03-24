@@ -1,3 +1,5 @@
 backend/__pycache__/
 *.pyc
 backend/env
+.DS_STORE
+.env

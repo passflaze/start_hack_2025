@@ -12,8 +12,8 @@ from app.sentiment_analysis import get_sentiment_score
 from app.api.routes.historical import asset_list
 
 
-api_key_gemini = "AIzaSyDwep2fdGC4e8OZ1O46yhCxqq9pUgyVgB0"
-api_key_gemini_luca = "AIzaSyDwep2fdGC4e8OZ1O46yhCxqq9pUgyVgB0"
+api_key_gemini = os.getenv("LLM_API_KEY")
+api_key_gemini_luca = os.getenv("LLM_API_KEY")
 
 
 from google import genai

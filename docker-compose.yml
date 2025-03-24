@@ -5,17 +5,26 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
     networks:
       - seven_network
-    #env_file:
-    #  - .env
     environment:
-        DEEPGRAM_API_KEY: 2855fcd8ca79dce205acf7139a218c958c31abea
-    #   DB_HOST: ${DB_HOST?Variable not set}
-    #   DB_USER: ${DB_USER?Variable not set}
-    #   DB_PASSWORD: ${DB_PASSWORD?Variable not set}
-    #   DB_DATABASE: ${DB_DATABASE?Variable not set}
+      LLM_API_KEY: 
     container_name: seven_backend
+
+  frontend:
+    build:
+      context: ./frontend_
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    networks:
+      - seven_network
+    container_name: seven_frontend
 
 networks:
   seven_network:
