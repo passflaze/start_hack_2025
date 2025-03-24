@@ -1,5 +1,5 @@
 backend/__pycache__/
 *.pyc
 backend/env
-.DS_STORE
+.DS_Store
 .env
