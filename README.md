@@ -33,7 +33,6 @@ EchoAnalytics was developed with during March 19-20-21 in [Saint Gallen](https:/
 ### Prerequisites
 Ensure you have the following installed:
 - [Docker](https://www.docker.com/)
-- [Node.js](https://nodejs.org/)
 
 ### Running Locally
 1. Go to docker-compose.yml and put your Google AI api key
